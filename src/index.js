@@ -10,6 +10,7 @@ const { PORT } = process.env;
 
 const app = express();
 app.use(express.json());
+app.get("/ok", (req, res) => res.send("Im alive!!!"));
 app.use("person", personRoutes);
 
 app.use(errorMiddleware);
