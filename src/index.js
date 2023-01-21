@@ -14,4 +14,4 @@ app.get("/ok", (req, res) => res.send("Im alive!!!"));
 app.use("person", personRoutes);
 
 app.use(errorMiddleware);
-app.listen(() => console.log(`Running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Running on port ${PORT}`));
