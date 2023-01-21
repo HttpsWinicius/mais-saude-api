@@ -14,6 +14,11 @@ app.use(express.json());
 app.get("/ok", (req, res) => res.send("Im alive!!!"));
 app.use("/person", personRoutes);
 app.use("/vaccine", vaccineRoutes);
+app.get("/", (req, res) => {
+    res.send("Express on Vercel");
+});
 
 app.use(errorMiddleware);
 app.listen(PORT, () => console.log(`Running on port ${PORT}`));
+
+export default app;
