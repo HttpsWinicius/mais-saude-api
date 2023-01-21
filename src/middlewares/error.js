@@ -1,6 +1,7 @@
 import CustomError from "../errors/CustomError.js";
 
 export const errorMiddleware = (err, req, res, next) => {
+  console.error(err);
   if (err instanceof CustomError) {
     return res.status(err.statusCode).json({ message: err.userMessage });
   }
