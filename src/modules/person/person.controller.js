@@ -1,5 +1,5 @@
 import BadRequestError from "../../errors/BadRequestError.js";
-import { addDefaultVaccinations } from "../vaccination/vaccination.service.js";
+// import { addDefaultVaccinations } from "../vaccination/vaccination.service.js";
 
 export const signup = async (req, res) => {
   const personAlreadyExists = await checkPersonAlreadyExists(req.body.cpf);
@@ -8,6 +8,6 @@ export const signup = async (req, res) => {
   }
 
   const personId = await createNewPerson(req.body);
-  await addDefaultVaccinations(personId);
+  // await addDefaultVaccinations(personId);
   res.status(201).json({ personId });
 };

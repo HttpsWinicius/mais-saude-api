@@ -5,6 +5,6 @@ export default class PersonRepository {
   }
 
   async findById(id) {
-    this.dbClient(this.table).where();
+    const person = await this.dbClient(this.table).where("id", id);
   }
 }
