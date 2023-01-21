@@ -1,12 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
 import "express-async-errors";
+import "./config/database.js";
 // import notifierRoute from "./modules/notifier/notifier.route";
 import personRoutes from "./modules/person/person.route.js";
 import vaccineRoutes from "./modules/vaccine/vaccine.route.js";
 import { errorMiddleware } from "./middlewares/error.js";
 
-dotenv.config();
 const { PORT } = process.env;
 
 const app = express();
