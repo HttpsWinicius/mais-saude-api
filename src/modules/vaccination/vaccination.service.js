@@ -1,1 +1,4 @@
-export const addDefaultVaccinations = async (personId) => {};
+export const getVaccinationPerson = async (personId) => {
+    
+
+};
