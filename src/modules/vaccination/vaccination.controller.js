@@ -60,7 +60,7 @@ const sendSms = async (namePerson, nameVaccine, scheduleDate, telephone) => {
 
   var config = {
     method: "post",
-    url: "https://api.nvoip.com.br/v2/sms?napikey=MGlJQWpsbjVSSkQ5NWxNSEwzMWtUNWNPOElHT05naGU=",
+    url: "https://api.nvoip.com.br/v2/sms?napikey=STI4V1pVa2ZHOWpsMkhXN2JJUVNCTVNQY0lQS1JRbDk=",
     headers: {
       "Content-Type": "application/json",
     },
