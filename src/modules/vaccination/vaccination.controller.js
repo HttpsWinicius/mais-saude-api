@@ -5,13 +5,18 @@ import axios from "axios";
 export const updateVaccination = async (req, res) => {
   try {
     await dbClient("tbl_vaccination")
-      .where("id_person", "=", req.user, "id_vaccine", "=", req.body.idVaccine)
+      .where("id_person", "=", req.user, "id", "=", req.body.idVaccine)
       .update({
         date: req.body.date,
         batch: req.body.batch,
       });
 
-    const resultVaccine = await getPeriodicity(req.body.idVaccine);
+    const [vaccination] = await dbClient("tbl_vaccination").where(
+      "id",
+      idVaccine
+    );
+
+    const resultVaccine = await getPeriodicity(vaccination.id_vaccine);
     const schedule_date = dayjs(req.body.date)
       .add(resultVaccine.periodicity, "day")
       .format("YYYY-MM-DD");
@@ -23,12 +28,17 @@ export const updateVaccination = async (req, res) => {
       schedule_date,
     });
 
-    await sendSms(resultPerson.name, resultVaccine.name, schedule_date, resultPerson.phone);
+    await sendSms(
+      resultPerson.name,
+      resultVaccine.name,
+      schedule_date,
+      resultPerson.phone
+    );
 
     res.status(200).json("Success");
   } catch (e) {
     console.log(e.message);
-    res.status(500).json({ "Error": e.message });
+    res.status(500).json({ Error: e.message });
   }
 };
 
