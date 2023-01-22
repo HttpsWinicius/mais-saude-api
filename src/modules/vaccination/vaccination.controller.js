@@ -15,6 +15,7 @@ export const updateVaccination = async (req, res) => {
       )
       .update({
         date: req.body.date,
+        batch: req.body.batch
       });
 
     const resultVaccine = await getPeriodicity(req.body.idVaccine);
