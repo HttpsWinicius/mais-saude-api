@@ -1,4 +1,5 @@
 import { dbClient } from "../../config/database.js";
+import dayjs from "dayjs";
 
 export const saveVaccination = async (req, res) => {
   const vaccination = await dbClient("tbl_vaccination").insert(req.body, "*");
@@ -24,9 +25,12 @@ export const updateVaccination = async (req, res) => {
     const periodicityVaccine = await getPeriodicity(req.body.idVaccine);
 
     console.log("periodicityVaccine", periodicityVaccine);
+    const newDate = dayjs(req.body.date).add(periodicityVaccine, 'day').format('YYYY-MM-DD');
+    console.log(newDate);
 
     res.status(200).json("Success Update");
   } catch (e) {
+    console.log(e.message);
     res.status(500).json("Error updated", e.message);
   }
 };
