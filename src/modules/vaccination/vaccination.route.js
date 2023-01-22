@@ -3,7 +3,6 @@ import { saveVaccination, updateVaccination, getVaccination } from './vaccinatio
 
 const router = new Router();
 
-router.post("/", saveVaccination);
 router.patch("/check", updateVaccination);
 router.get("/", getVaccination);
 

@@ -11,12 +11,17 @@ export const updateVaccination = async (req, res) => {
 
   try {
     await dbClient("tbl_vaccination")
-      .where('id_person', "=", req.body.id)
+      .where('id_person', "=", req.body.id, 'id_vaccine', '=', req.body.idVaccine)
       .update({
         date: req.body.date,
       })
 
-    res.status(204);
+    const periodicityVaccine = await getPeriodicity(req.body.idVaccine);
+
+    console.log('periodicityVaccine', periodicityVaccine);
+
+
+    res.status(200).json("Success Update");
   } catch (e) {
     res.status(500).json('Error updated', e.message);
   }
@@ -24,8 +29,21 @@ export const updateVaccination = async (req, res) => {
 
 };
 
+const getPeriodicity = async (idVaccine) => {
+
+  const [result] = await dbClient
+    .select('vaccine.periodicity')
+    .from('tbl_vaccine as vaccine')
+    .where('vaccine.id', idVaccine)
+
+  console.log(result.periodicity);
+
+  return result.periodicity;
+
+}
+
 export const getVaccination = async (req, res) => {
-  const paramsId = 6;
+  const paramsId = 15;
 
   const data = await dbClient.select('vaccination.id', 'vaccine.name', 'vaccination.date', 'vaccination.schedule_date', 'vaccination.batch', 'vaccination.maker')
     .from('tbl_vaccine as vaccine')
