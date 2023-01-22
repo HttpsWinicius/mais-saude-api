@@ -8,10 +8,12 @@ import personRoutes from "./modules/person/person.route.js";
 import vaccineRoutes from "./modules/vaccine/vaccine.route.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import { authenticateMiddleware } from "./middlewares/authenticate.js";
+import cors from "cors";
 
 const { PORT } = process.env;
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.get("/ok", (req, res) => res.send("Im alive!!!"));
 app.use("/person", personRoutes);
