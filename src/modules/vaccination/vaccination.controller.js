@@ -1,7 +1,6 @@
 import { dbClient } from "../../config/database.js";
 import dayjs from "dayjs";
 import axios from "axios";
-import nodemailer from "nodemailer";
 
 export const updateVaccination = async (req, res) => {
   try {
