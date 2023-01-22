@@ -13,7 +13,7 @@ export const updateVaccination = async (req, res) => {
       .where(
         "id_person",
         "=",
-        req.body.id,
+        req.user,
         "id_vaccine",
         "=",
         req.body.idVaccine
@@ -24,10 +24,18 @@ export const updateVaccination = async (req, res) => {
 
     const periodicityVaccine = await getPeriodicity(req.body.idVaccine);
 
-    const newDate = dayjs(req.body.date).add(periodicityVaccine, 'day').format('YYYY-MM-DD');
-    console.log(newDate);
+    const schedule_date = dayjs(req.body.date).add(periodicityVaccine, 'day').format('YYYY-MM-DD');
+    console.log(schedule_date);
 
-    res.status(200).json("Success Update");
+    console.log(req.user);
+
+    await dbClient("tbl_vaccination").insert({
+      id_person: req.user,
+      id_vaccine: req.body.idVaccine,
+      schedule_date
+    })
+
+    res.status(200).json("Success");
   } catch (e) {
     console.log(e.message);
     res.status(500).json("Error updated", e.message);
