@@ -7,6 +7,7 @@ import "./config/database.js";
 import personRoutes from "./modules/person/person.route.js";
 import vaccineRoutes from "./modules/vaccine/vaccine.route.js";
 import { errorMiddleware } from "./middlewares/error.js";
+import { authenticateMiddleware } from "./middlewares/authenticate.js";
 
 const { PORT } = process.env;
 
@@ -14,9 +15,10 @@ const app = express();
 app.use(express.json());
 app.get("/ok", (req, res) => res.send("Im alive!!!"));
 app.use("/person", personRoutes);
+app.use(authenticateMiddleware);
 app.use("/vaccine", vaccineRoutes);
 app.get("/", (req, res) => {
-    res.send("Express on Vercel");
+  res.send("Express on Vercel");
 });
 
 app.use(errorMiddleware);
