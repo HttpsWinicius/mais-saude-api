@@ -24,7 +24,6 @@ export const updateVaccination = async (req, res) => {
 
     const periodicityVaccine = await getPeriodicity(req.body.idVaccine);
 
-    console.log("periodicityVaccine", periodicityVaccine);
     const newDate = dayjs(req.body.date).add(periodicityVaccine, 'day').format('YYYY-MM-DD');
     console.log(newDate);
 
