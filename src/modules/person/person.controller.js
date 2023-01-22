@@ -48,7 +48,7 @@ export const login = async (req, res) => {
   const isRightPassword = await bcrypt.compare(password, person.password);
   if (!isRightPassword) {
     console.error("Wrong password");
-    throw new Error({"error":"Usuário ou senha inválidos."});
+    throw new Error("Usuário ou senha inválidos.");
   }
 
   const payload = { id: person.id };
