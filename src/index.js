@@ -6,6 +6,7 @@ import "./config/database.js";
 // import notifierRoute from "./modules/notifier/notifier.route";
 import personRoutes from "./modules/person/person.route.js";
 import vaccineRoutes from "./modules/vaccine/vaccine.route.js";
+import vaccinationRoutes from "./modules/vaccination/vaccination.route.js"
 import { errorMiddleware } from "./middlewares/error.js";
 
 const { PORT } = process.env;
@@ -15,6 +16,7 @@ app.use(express.json());
 app.get("/ok", (req, res) => res.send("Im alive!!!"));
 app.use("/person", personRoutes);
 app.use("/vaccine", vaccineRoutes);
+app.use("/vaccination", vaccinationRoutes)
 app.get("/", (req, res) => {
     res.send("Express on Vercel");
 });
