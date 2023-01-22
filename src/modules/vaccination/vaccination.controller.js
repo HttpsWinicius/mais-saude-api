@@ -5,7 +5,7 @@ import axios from "axios";
 export const updateVaccination = async (req, res) => {
   try {
     await dbClient("tbl_vaccination")
-      .where("id_person", "=", req.user, "id", "=", req.body.idVaccine)
+      .where("id", req.body.idVaccine)
       .update({
         date: req.body.date,
         batch: req.body.batch,
