@@ -1,6 +1,7 @@
 import { dbClient } from "../../config/database.js";
 import dayjs from "dayjs";
 import axios from "axios";
+import nodemailer from "nodemailer";
 
 export const updateVaccination = async (req, res) => {
   try {
@@ -29,11 +30,12 @@ export const updateVaccination = async (req, res) => {
     })
 
     await sendSms(resultPerson.name, resultVaccine.name, schedule_date, resultPerson.phone);
+    
 
     res.status(200).json("Success");
   } catch (e) {
     console.log(e.message);
-    res.status(500).json("Error updated", e.message);
+    res.status(500).json({"Error": e.message});
   }
 };
 
