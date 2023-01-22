@@ -33,7 +33,7 @@ export const signup = async (req, res) => {
   } catch (error) {
     console.error("Transaction", error);
     await trx.rollback();
-    res.status(500).send("Internal Server Error.");
+    res.status(500).send(error);
   }
 };
 
