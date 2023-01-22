@@ -1,10 +1,4 @@
-import CustomError from "../errors/CustomError.js";
-
 export const errorMiddleware = (err, req, res, next) => {
-  console.error(err);
-  if (err instanceof CustomError) {
-    return res.status(err.statusCode).json({ message: err.userMessage });
-  }
-
-  res.status(500).send("Internal Server Error");
+  console.error("Error middleware", err);
+  res.status(400).json(err.message);
 };
