@@ -11,13 +11,11 @@ export const updateVaccination = async (req, res) => {
         batch: req.body.batch,
       });
 
-    console.log(req.body.idVaccine);
     const [vaccination] = await dbClient("tbl_vaccination")
       .where(
         "id",
         req.body.idVaccine
       );
-    console.log(vaccination);
 
     const resultVaccine = await getPeriodicity(vaccination.id_vaccine);
     const schedule_date = dayjs(req.body.date)
@@ -27,7 +25,7 @@ export const updateVaccination = async (req, res) => {
 
     await dbClient("tbl_vaccination").insert({
       id_person: req.user,
-      id_vaccine: req.body.idVaccine,
+      id_vaccine: vaccination.id_vaccine,
       schedule_date,
     });
 
