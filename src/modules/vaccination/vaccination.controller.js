@@ -1,11 +1,6 @@
 import { dbClient } from "../../config/database.js";
 import dayjs from "dayjs";
-
-export const saveVaccination = async (req, res) => {
-  const vaccination = await dbClient("tbl_vaccination").insert(req.body, "*");
-
-  res.json(vaccination);
-};
+import axios from "axios";
 
 export const updateVaccination = async (req, res) => {
   try {
@@ -22,18 +17,17 @@ export const updateVaccination = async (req, res) => {
         date: req.body.date,
       });
 
-    const periodicityVaccine = await getPeriodicity(req.body.idVaccine);
-
-    const schedule_date = dayjs(req.body.date).add(periodicityVaccine, 'day').format('YYYY-MM-DD');
-    console.log(schedule_date);
-
-    console.log(req.user);
+    const resultVaccine = await getPeriodicity(req.body.idVaccine);
+    const schedule_date = dayjs(req.body.date).add(resultVaccine.periodicity, 'day').format('YYYY-MM-DD');
+    const resultPerson = await getNamePerson(req.user);
 
     await dbClient("tbl_vaccination").insert({
       id_person: req.user,
       id_vaccine: req.body.idVaccine,
       schedule_date
     })
+
+    await sendSms(resultPerson.name, resultVaccine.name, schedule_date, resultPerson.phone);
 
     res.status(200).json("Success");
   } catch (e) {
@@ -42,15 +36,57 @@ export const updateVaccination = async (req, res) => {
   }
 };
 
+
+const sendSms = async (namePerson, nameVaccine, scheduleDate, telephone) => {
+
+  scheduleDate = dayjs(scheduleDate).format('DD/MM/YYYY');
+
+  const textMessage = "Atenção!! " + namePerson + ", sua proxima vacina de " + nameVaccine
+    + " foi agendada para " + scheduleDate
+    + " mais não se preocupe, te lembraremos no dia.";
+
+  var data = JSON.stringify({
+    "numberPhone": telephone,
+    "message": textMessage,
+    "flashSms": true
+  });
+
+  var config = {
+    method: 'post',
+    url: 'https://api.nvoip.com.br/v2/sms?napikey=MGlJQWpsbjVSSkQ5NWxNSEwzMWtUNWNPOElHT05naGU=',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  };
+
+  axios(config)
+    .then(function (response) {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
 const getPeriodicity = async (idVaccine) => {
   const [result] = await dbClient
-    .select("vaccine.periodicity")
+    .select("vaccine.periodicity", "vaccine.name")
     .from("tbl_vaccine as vaccine")
     .where("vaccine.id", idVaccine);
 
-  console.log(result.periodicity);
+  console.log(result);
 
-  return result.periodicity;
+  return result;
+};
+
+const getNamePerson = async (idPerson) => {
+  const [result] = await dbClient
+    .select("person.phone", "person.name")
+    .from("tbl_person as person")
+    .where("person.id", idPerson);
+
+  return result;
 };
 
 export const getVaccination = async (req, res) => {
