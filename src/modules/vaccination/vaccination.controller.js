@@ -4,18 +4,15 @@ import axios from "axios";
 
 export const updateVaccination = async (req, res) => {
   try {
-    await dbClient("tbl_vaccination")
-      .where("id", req.body.idVaccine)
-      .update({
-        date: req.body.date,
-        batch: req.body.batch,
-      });
+    await dbClient("tbl_vaccination").where("id", req.body.idVaccine).update({
+      date: req.body.date,
+      batch: req.body.batch,
+    });
 
-    const [vaccination] = await dbClient("tbl_vaccination")
-      .where(
-        "id",
-        req.body.idVaccine
-      );
+    const [vaccination] = await dbClient("tbl_vaccination").where(
+      "id",
+      req.body.idVaccine
+    );
 
     const resultVaccine = await getPeriodicity(vaccination.id_vaccine);
     const schedule_date = dayjs(req.body.date)
@@ -100,17 +97,18 @@ const getNamePerson = async (idPerson) => {
 };
 
 export const getStatus = (vaccination) => {
-  if (!vaccination.date && !vaccination.schedule_date) return "Não informado";
+  if (!vaccination.date && !vaccination.schedule_date)
+    return { status: "Não informado", order: 1 };
 
   if (vaccination.date) {
-    return "Em dia";
+    return { status: "Em dia", order: 3 };
   }
 
   if (dayjs(vaccination.schedule_date).isBefore(dayjs())) {
-    return "Em atraso";
+    return { status: "Em atraso", order: 2 };
   }
 
-  return "Em dia";
+  return { status: "Em dia", order: 3 };
 };
 
 export const formatDate = (dateValue) => {
@@ -136,12 +134,15 @@ export const getVaccination = async (req, res) => {
     )
     .where("vaccination.id_person", req.user);
 
-  const vaccinations = data.map((vaccination) => ({
-    ...vaccination,
-    date: formatDate(vaccination.date),
-    schedule_date: formatDate(vaccination.schedule_date),
-    status: getStatus(vaccination),
-  }));
+  const vaccinations = data
+    .map((vaccination) => ({
+      ...vaccination,
+      date: formatDate(vaccination.date),
+      schedule_date: formatDate(vaccination.schedule_date),
+      status: getStatus(vaccination).status,
+      order: getStatus(vaccination).order,
+    }))
+    .sort((a, b) => a.order - b.order);
 
   res.json(vaccinations);
 };
