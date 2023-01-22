@@ -22,10 +22,14 @@ export const signup = async (req, res) => {
       id_person: result.id,
       id_vaccine: vaccine.id,
     }));
-    console.log("vaccinations", vaccinations);
     await trx("tbl_vaccination").insert(vaccinations);
     await trx.commit();
-    res.status(201).json({ personId: result.id });
+
+    const payload = { id: result.id };
+    const token = jwt.sign(payload, process.env.API_SECRET, {
+      expiresIn: "1d",
+    });
+    res.status(201).json({ token });
   } catch (error) {
     console.error("Transaction", error);
     await trx.rollback();
